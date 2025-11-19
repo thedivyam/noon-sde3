@@ -1,37 +1,55 @@
 import { Tabs } from "expo-router";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Spacing } from "@/constants/design";
+import { useDesignColors } from "@/hooks/use-design-colors";
+import { useDesignShadows } from "@/hooks/use-design-shadows";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
+  const Colors = useDesignColors();
+  const Shadows = useDesignShadows();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: true,
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.text.tertiary,
+        headerShown: false,
         tabBarButton: HapticTab,
+        tabBarStyle: {
+          backgroundColor: Colors.background.primary,
+          borderTopWidth: 0,
+          borderTopColor: Colors.border.light,
+          height: 70 + insets.bottom,
+          paddingBottom: insets.bottom + Spacing.md,
+          paddingTop: Spacing.sm,
+          ...Shadows.lg,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+          marginTop: Spacing.xs,
+        },
+        tabBarIconStyle: {
+          marginTop: Spacing.xs,
+        },
+        tabBarShowLabel: true,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={24}
+              name={focused ? "house.fill" : "house"}
+              color={color}
+            />
           ),
         }}
       />
@@ -40,11 +58,7 @@ export default function TabLayout() {
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => (
-            <IconSymbol
-              size={28}
-              name="magnifyingglass.circle.fill"
-              color={color}
-            />
+            <IconSymbol size={24} name="magnifyingglass" color={color} />
           ),
         }}
       />
@@ -53,7 +67,7 @@ export default function TabLayout() {
         options={{
           title: "Cart",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="cart.circle.fill" color={color} />
+            <IconSymbol size={24} name="cart" color={color} />
           ),
         }}
       />
